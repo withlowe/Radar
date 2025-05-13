@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Radar from "../components/radar"
-import { BASE64_RADAR_LOGO } from "../components/inline-logo"
 
 export default function Page() {
   const [score, setScore] = useState(0)
@@ -10,8 +9,6 @@ export default function Page() {
   const [isPaused, setIsPaused] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [logoError, setLogoError] = useState(false)
-  const logoRef = useRef<HTMLDivElement>(null)
 
   // Check if we can use fullscreen API
   useEffect(() => {
@@ -70,30 +67,45 @@ export default function Page() {
     }
   }
 
-  const handleLogoError = () => {
-    console.log("Logo failed to load, using base64 fallback")
-    setLogoError(true)
-  }
+  // Inline SVG for reliability
+  const RadarLogoSVG = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+      {/* Outer circle */}
+      <circle cx="80" cy="80" r="78" stroke="white" strokeWidth="2" fill="none" />
+
+      {/* Middle circle */}
+      <circle cx="80" cy="80" r="50" stroke="white" strokeWidth="1.5" fill="none" strokeOpacity="0.7" />
+
+      {/* Inner circle */}
+      <circle cx="80" cy="80" r="20" stroke="white" strokeWidth="1" fill="none" strokeOpacity="0.5" />
+
+      {/* Center dot */}
+      <circle cx="80" cy="80" r="3" fill="white" />
+
+      {/* Radar line */}
+      <line x1="80" y1="80" x2="80" y2="2" stroke="white" strokeWidth="2" transform="rotate(45, 80, 80)" />
+
+      {/* Crosshairs */}
+      <line x1="80" y1="10" x2="80" y2="150" stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+      <line x1="10" y1="80" x2="150" y2="80" stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+
+      {/* Blip */}
+      <circle cx="110" cy="50" r="4" fill="white" />
+    </svg>
+  )
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center p-0 bg-blue-600">
       <div className="w-full h-screen max-w-4xl relative">
         {!gameStarted ? (
           <div className="flex flex-col items-center justify-center h-full bg-gradient-to-b from-blue-600 to-blue-700 text-white">
-            {/* Radar logo with base64 fallback */}
-            <div className="mb-8 relative w-40 h-40">
-              <img
-                src={logoError ? BASE64_RADAR_LOGO : "/radar-logo.svg"}
-                alt="Radar Logo"
-                width={160}
-                height={160}
-                className="animate-pulse"
-                onError={handleLogoError}
-              />
+            {/* Radar logo - inline SVG for reliability */}
+            <div className="mb-8 relative w-40 h-40 animate-pulse">
+              <RadarLogoSVG />
             </div>
 
             {/* Game title */}
-            <h1 className="text-6xl font-semibold tracking-wider mb-16">RADAR</h1>
+            <h1 className="text-6xl font-semibold tracking-wider mb-16">Radar</h1>
 
             {/* Start button */}
             <button
@@ -104,21 +116,15 @@ export default function Page() {
             </button>
 
             {/* Bottom text */}
-            <p className="text-lg font-mono tracking-wide mt-8">STAY IN RADAR TO SCORE</p>
+            <p className="text-lg font-mono tracking-wide mt-8">Find targets without being detected.</p>
           </div>
         ) : !isGameOver ? (
           <Radar score={score} onPause={handlePause} onGameOver={handleGameOver} onScoreUpdate={handleScoreUpdate} />
         ) : (
           <div className="flex flex-col items-center justify-center h-full bg-gradient-to-b from-blue-600 to-blue-700 text-white">
-            {/* Radar logo with base64 fallback */}
+            {/* Radar logo - inline SVG for reliability */}
             <div className="mb-6 relative w-32 h-32">
-              <img
-                src={logoError ? BASE64_RADAR_LOGO : "/radar-logo.svg"}
-                alt="Radar Logo"
-                width={128}
-                height={128}
-                onError={handleLogoError}
-              />
+              <RadarLogoSVG />
             </div>
 
             <h1 className="text-5xl font-medium font-mono tracking-wider mb-4">GAME OVER</h1>
