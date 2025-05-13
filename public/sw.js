@@ -1,4 +1,4 @@
-const CACHE_NAME = "orbital-radar-v1"
+const CACHE_NAME = "radar-game-v1"
 const urlsToCache = ["/", "/manifest.json", "/radar-logo.svg", "/icons/icon-192.png", "/icons/icon-512.png"]
 
 self.addEventListener("install", (event) => {
