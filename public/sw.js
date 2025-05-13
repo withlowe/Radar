@@ -1,5 +1,5 @@
 const CACHE_NAME = "radar-game-v1"
-const urlsToCache = ["/", "/manifest.json", "/icons/icon-192.png", "/icons/icon-512.png"]
+const urlsToCache = ["/", "/manifest.json"]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
